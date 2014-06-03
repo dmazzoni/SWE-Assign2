@@ -3,16 +3,27 @@ package it.univr.swe.communication;
 import it.univr.swe.*;
 import it.univr.swe.exception.*;
 import it.univr.swe.messages.*;
+
 import java.util.*;
 
 public abstract class SendBehavior {
 
 	protected Car car;
 	protected Timer timer;
+	protected TimerTask speedTask;
 	
 	protected SendBehavior(Car car) {
 		this.car = car;
-		this.timer = new Timer();
+		timer = new Timer();
+		speedTask = new TimerTask() {
+
+			@Override
+			public void run() {
+				Car c = SendBehavior.this.car;
+				SendBehavior.this.sendSpeed(new SpeedMessage(c.getId(), c.getSpeed()));
+			}
+			
+		};
 	}
 	
 	public void send(Message msg) {
