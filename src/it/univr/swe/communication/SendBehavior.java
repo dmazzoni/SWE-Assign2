@@ -1,16 +1,18 @@
 package it.univr.swe.communication;
 
 import it.univr.swe.*;
+import it.univr.swe.exception.*;
 import it.univr.swe.messages.*;
 import java.util.*;
 
 public abstract class SendBehavior {
 
 	protected Car car;
-	private Timer timer;
+	protected Timer timer;
 	
 	protected SendBehavior(Car car) {
 		this.car = car;
+		this.timer = new Timer();
 	}
 	
 	public void send(Message msg) {
@@ -20,6 +22,8 @@ public abstract class SendBehavior {
 			sendSpeed((SpeedMessage) msg);
 		else if (msg instanceof ExitMessage)
 			sendExit((ExitMessage) msg);
+		else
+			throw new IllegalMessageException();
 	}
 	
 	protected abstract void sendOk(OkMessage msg);
