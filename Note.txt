@@ -1,0 +1,5 @@
+SCHEMA:
+	ExitMessage -> Manca getType()
+	TowerMessage -> Manca isBrake()
+	RegisterMessage -> Manca getDestination()
+	
