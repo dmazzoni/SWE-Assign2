@@ -19,7 +19,5 @@ public class SpeedMessage implements Message {
 	public int getSpeed() {
 		return speed;
 	}
-	
-	
 
 }
