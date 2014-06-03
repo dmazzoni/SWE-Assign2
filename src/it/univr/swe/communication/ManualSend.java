@@ -26,6 +26,7 @@ public class ManualSend extends SendBehavior {
 
 	@Override
 	protected void sendExit(ExitMessage msg) {
+		timer.cancel();
 		TowerChannel ch = car.getTowerChannel();
 		ch.transmit(msg);
 	}
