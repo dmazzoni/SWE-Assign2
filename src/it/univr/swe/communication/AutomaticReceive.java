@@ -5,7 +5,7 @@ import it.univr.swe.messages.*;
 
 public class AutomaticReceive extends ReceiveBehavior {
 	
-	public AutomaticReceive(AutomaticCar car) {
+	public AutomaticReceive(Car car) {
 		super(car);
 	}
 
