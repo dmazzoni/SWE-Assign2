@@ -15,7 +15,7 @@ public class CarChannel
 		this.tower = tower;
 	}
 	
-	public void trasnmit(Message msg)
+	public void transmit(Message msg)
 	{
 		if(msg instanceof SpeedMessage || msg instanceof ExitMessage)
 		{

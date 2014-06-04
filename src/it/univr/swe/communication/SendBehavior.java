@@ -26,7 +26,7 @@ public abstract class SendBehavior {
 		};
 	}
 	
-	public void send(Message msg) {
+	public final void send(Message msg) {
 		if (msg instanceof OkMessage)
 			sendOk((OkMessage) msg);
 		else if (msg instanceof SpeedMessage)

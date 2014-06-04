@@ -12,7 +12,7 @@ public abstract class ReceiveBehavior {
 		this.car = car;
 	}
 	
-	public void receive(Message msg) {
+	public final void receive(Message msg) {
 		if (msg instanceof JoinMessage)
 			receiveJoin((JoinMessage) msg);
 		else if (msg instanceof TowerMessage)
