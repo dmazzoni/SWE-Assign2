@@ -5,10 +5,14 @@ import it.univr.swe.messages.*;
 
 public class ManualSend extends SendBehavior {
 	
-	private static final int SPEED_MSG_INTERVAL = 200;
+	protected static final int SPEED_MSG_INTERVAL = 200;
 	
 	public ManualSend(Car car) {
 		super(car);
+	}
+	
+	@Override
+	protected void startSpeedUpdates() {
 		timer.schedule(speedTask, 0, SPEED_MSG_INTERVAL);
 	}
 

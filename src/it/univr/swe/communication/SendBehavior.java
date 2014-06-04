@@ -37,6 +37,8 @@ public abstract class SendBehavior {
 			throw new IllegalMessageException();
 	}
 	
+	protected abstract void startSpeedUpdates();
+	
 	protected abstract void sendOk(OkMessage msg);
 	
 	protected abstract void sendSpeed(SpeedMessage msg);

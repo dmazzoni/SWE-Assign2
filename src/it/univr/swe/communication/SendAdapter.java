@@ -13,6 +13,11 @@ public class SendAdapter extends AutomaticSend {
 	}
 	
 	@Override
+	protected void startSpeedUpdates() {
+		timer.schedule(speedTask, 0, ManualSend.SPEED_MSG_INTERVAL);
+	}
+	
+	@Override
 	protected void sendOk(OkMessage msg) {
 		manual.sendOk(msg);
 	}
