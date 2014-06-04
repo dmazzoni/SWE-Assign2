@@ -15,20 +15,23 @@ public class AutomaticSend extends SendBehavior {
 	@Override
 	protected void sendOk(OkMessage msg) {
 		TowerChannel ch = car.getTowerChannel();
-		ch.transmit(msg);
+		if (ch != null)
+			ch.transmit(msg);
 	}
 
 	@Override
 	protected void sendSpeed(SpeedMessage msg) {
 		CarChannel ch = car.getCarChannel();
-		ch.transmit(msg);
+		if (ch != null)
+			ch.transmit(msg);
 	}
 
 	@Override
 	protected void sendExit(ExitMessage msg) {
 		timer.cancel();
 		TowerChannel ch = car.getTowerChannel();
-		ch.transmit(msg);
+		if (ch != null)
+			ch.transmit(msg);
 	}
 
 }

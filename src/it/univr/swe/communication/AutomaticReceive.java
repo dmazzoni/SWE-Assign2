@@ -13,6 +13,8 @@ public class AutomaticReceive extends ReceiveBehavior {
 	protected void receiveJoin(JoinMessage msg) {
 		
 		if (car.getCarChannel() == null) {
+			TowerChannel ch = msg.getChannel();
+			car.setTowerChannel(ch);
 			OkMessage reply = new OkMessage(car.getId(), CarType.AUTOMATIC);
 			car.send(reply);
 		}
