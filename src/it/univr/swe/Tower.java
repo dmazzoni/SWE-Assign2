@@ -8,14 +8,20 @@ import it.univr.swe.messages.Message;
 import it.univr.swe.messages.OkMessage;
 import it.univr.swe.messages.RegisterMessage;
 import it.univr.swe.messages.SpeedMessage;
+import it.univr.swe.messages.TowerMessage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Tower
 {
+	private static final int SPEED_MSG_INTERVAL = 50;
+	
 	/**
 	 * Map to take trace of the speed of every registered car in the system.
 	 * If the Boolean value is set to true, the next sent message alerts the
@@ -33,36 +39,63 @@ public class Tower
 	 */
 	private TowerChannel towerChannel;
 	/**
-	 * Buffer for the messages created in response to an OkMessage. 
-	 * The tower send them all on the next signal by the
+	 * Buffer for the messages created in response to an invocation of the
+	 * method receive. The tower send them all on the next signal by the
 	 * internal timer. 
 	 */
 	private List<Message> buffer;
 	
 	/**
-	 * Empty constructor
+	 * Timer for the transmission interval of the messages.
 	 */
+	private Timer timer;
+	
 	public Tower()
 	{
 		map = new HashMap<Integer, Boolean>();
 		carChannels = new CarChannel[5];
-		carChannels[0] = new CarChannel();
-		carChannels[1] = new CarChannel();
-		carChannels[2] = new CarChannel();
-		carChannels[3] = new CarChannel();
-		carChannels[4] = new CarChannel();
-		towerChannel = new TowerChannel();
+		carChannels[0] = new CarChannel(this);
+		carChannels[1] = new CarChannel(this);
+		carChannels[2] = new CarChannel(this);
+		carChannels[3] = new CarChannel(this);
+		carChannels[4] = new CarChannel(this);
+		towerChannel = new TowerChannel(this);
 		buffer = new ArrayList<Message>();
+		timer = new Timer();
+		
+		//Set the task
+		TimerTask task = new TimerTask()
+		{
+			@Override
+			public void run()
+			{
+				//Send all the messages into the buffer
+				for(Message msg : buffer)
+				{
+					if(msg instanceof RegisterMessage)
+					{
+						towerChannel.transmit(msg);
+					}
+				}
+				//Send the messages based on the map.
+				for(Entry<Integer, Boolean> entry : map.entrySet())
+				{
+					towerChannel.transmit(new TowerMessage(entry.getKey(), entry.getValue()));
+				}
+			}
+		};
+		timer.schedule(task, 0, SPEED_MSG_INTERVAL);
 	}
 	
 	/**
-	 * Method invoked by channels to transfer a message to the tower
-	 * @param msg
+	 * Method invoked by channels to transfer a messages from cars
+	 * to the tower.
+	 * @param msg	the message to transfer
 	 * @throws IllegalMessageException
-	 * @throws IllegalCarTypeException
 	 */
 	public void receive(Message msg) throws IllegalMessageException
 	{
+		//Choose the action to do switching on the message implementation
 		if(msg instanceof OkMessage)
 		{
 			int id = ((OkMessage) msg).getSource();
