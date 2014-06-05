@@ -3,12 +3,18 @@ package it.univr.swe.communication;
 import it.univr.swe.*;
 import it.univr.swe.messages.*;
 
+/**
+ * The message receiving behavior of an {@link AutomaticCar}.
+ */
 public class AutomaticReceive extends ReceiveBehavior {
 	
 	public AutomaticReceive(Car car) {
 		super(car);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected void receiveJoin(JoinMessage msg) {
 		
@@ -20,6 +26,10 @@ public class AutomaticReceive extends ReceiveBehavior {
 		}
 	}
 
+	/**
+	 * {@inheritDoc}<br>
+	 * The car automatically slows down to the speed limit if the message specifies so.
+	 */
 	@Override
 	protected void receiveTower(TowerMessage msg) {
 		
@@ -35,6 +45,9 @@ public class AutomaticReceive extends ReceiveBehavior {
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected void receiveRegister(RegisterMessage msg) {
 		
