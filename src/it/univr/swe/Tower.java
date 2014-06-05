@@ -65,7 +65,23 @@ public class Tower
 			@Override
 			public void run()
 			{
-				//Send all the messages into the buffer
+				//If there's some message into the buffer
+				if(buffer.size() > 0)
+				{
+					towerChannel.transmit(buffer.remove(0));
+				}
+				else
+				{
+					for(Entry<Integer, Boolean> entry : map.entrySet())
+					{
+						towerChannel.transmit(new TowerMessage(entry.getKey(), entry.getValue()));
+						//transmit only the message of the first entry of the map
+						break;
+					}
+				}
+				
+				/* Previous version: send every message into the buffer and 
+				 * every message of the map
 				for(Message msg : buffer)
 				{
 					if(msg instanceof RegisterMessage)
@@ -77,7 +93,7 @@ public class Tower
 				for(Entry<Integer, Boolean> entry : map.entrySet())
 				{
 					towerChannel.transmit(new TowerMessage(entry.getKey(), entry.getValue()));
-				}
+				}*/
 			}
 		};
 		timer.schedule(task, 0, SPEED_MSG_INTERVAL);
