@@ -32,7 +32,7 @@ public class Tower
 	 * Array of channels used for the communication from registered cars to
 	 * the tower
 	 */
-	private CarChannel[] carChannels;
+	private ArrayList<CarChannel> carChannels;
 	/**
 	 * Reference to the channel dedicated to the broadcast communication at
 	 * every registered car.
@@ -53,12 +53,8 @@ public class Tower
 	public Tower()
 	{
 		map = new HashMap<Integer, Boolean>();
-		carChannels = new CarChannel[5];
-		carChannels[0] = new CarChannel(this);
-		carChannels[1] = new CarChannel(this);
-		carChannels[2] = new CarChannel(this);
-		carChannels[3] = new CarChannel(this);
-		carChannels[4] = new CarChannel(this);
+		carChannels = new ArrayList<CarChannel>();
+		carChannels.add(new CarChannel(this));
 		towerChannel = new TowerChannel(this);
 		buffer = new ArrayList<Message>();
 		timer = new Timer();
@@ -102,18 +98,30 @@ public class Tower
 			CarType type = ((OkMessage) msg).getType();
 			RegisterMessage regMsg = null;
 			
+			boolean is_full = true;
 			for(CarChannel ch : carChannels)
 			{
 				if( (100 - ch.getTraffic()) >= type.getTraffic())
 				{
+					is_full = false;
 					ch.setTraffic(ch.getTraffic() + type.getTraffic());
 					regMsg = new RegisterMessage(id, ch);
 					break;
 				}
 			}
 			
-			if(regMsg == null)
-				regMsg = new RegisterMessage(id, null);
+			if(is_full)
+			{
+				if(carChannels.size() < 5)
+				{
+					CarChannel ch = new CarChannel(this);
+					ch.setTraffic(ch.getTraffic() + type.getTraffic());
+					regMsg = new RegisterMessage(id, ch);
+					carChannels.add(ch);
+				}
+				else
+					regMsg = new RegisterMessage(id, null);
+			}
 			
 			buffer.add(regMsg);
 		}
