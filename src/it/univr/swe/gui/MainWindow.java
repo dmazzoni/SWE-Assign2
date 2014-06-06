@@ -2,6 +2,9 @@ package it.univr.swe.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Font;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -10,38 +13,44 @@ import it.univr.swe.Simulator;
 import it.univr.swe.Tower;
 import it.univr.swe.communication.CarChannel;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.JTextPane;
 import javax.swing.table.DefaultTableModel;
 
 @SuppressWarnings("serial")
 public class MainWindow extends JFrame{
 	
 	/***/
-	private Car[] cars = null;
+	private List<Car> cars;
 	/***/
 	private Tower tower;
 	/***/
-	private CarChannel[] carChannel;
-	/***/
-	private Simulator sim;
+	private List<CarChannel> carChannel;
 	/***/
 	private JTable table;
+	/***/
+	private JProgressBar[] progress;
+	/***/
+	private JTextArea towerActions;
 	
 	
 	public MainWindow(Simulator sim){
 		super();
 		
-		this.sim = sim;
+		sim.getObjects(this);
 		
-		this.setSize(700, 500);
+		this.setSize(900, 500);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		table = new JTable(new DefaultTableModel(new String[]{"Car ID", "Speed","Display","Tipo"},150));
+		table = new JTable(new DefaultTableModel(new String[]{"Car ID", "Speed","Display","Tipo"},0));
 		
 		JPanel internalPanel = new JPanel();
 		internalPanel.setLayout(new BorderLayout());
@@ -49,25 +58,47 @@ public class MainWindow extends JFrame{
 			/*LABEL*/
 			JPanel topPanel = new JPanel();
 				JLabel label = new JLabel("SWE-Assign2");
+				label.setFont(new Font("Serif", Font.BOLD, 24));
 				
 				topPanel.add(label);
 			
 			/*TABLE*/
-			JScrollPane scroll = new JScrollPane(table);
+			JScrollPane scroll = new JScrollPane(table,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+	                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 			table.setFillsViewportHeight(true); 
 			
 			/*TOWER*/
 			JPanel leftPanel = new JPanel();
 				leftPanel.setLayout(new BoxLayout(leftPanel,BoxLayout.PAGE_AXIS));
+				leftPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
 			
 				JLabel tower = new JLabel("Tower Actions");
 				tower.setAlignmentX(Component.CENTER_ALIGNMENT);
+				
+				towerActions = new JTextArea(1,30);
+				JScrollPane towerActionsScroll = new JScrollPane(towerActions,
+		                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+		                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		        towerActions.setLineWrap(true);
+		        towerActions.setWrapStyleWord(true);
+		        towerActions.setEditable(false);
 				
 				JLabel channels = new JLabel("Channels");
 				channels.setAlignmentX(Component.CENTER_ALIGNMENT);
 				
 				leftPanel.add(tower);
+				leftPanel.add(towerActionsScroll);
 				leftPanel.add(channels);
+				
+				progress = new JProgressBar[5];
+				for(int I = 0; I<5; I++){
+					progress[I] = new JProgressBar();
+					progress[I].setMaximum(100);
+					progress[I].setMinimum(0);
+					progress[I].setValue(0);
+					
+					leftPanel.add(progress[I]);
+				}
 			
 			internalPanel.add(topPanel,BorderLayout.NORTH);
 			internalPanel.add(scroll,BorderLayout.CENTER);
@@ -80,22 +111,12 @@ public class MainWindow extends JFrame{
 		
 	}
 	
-	
-	
-	public void setCars(Car[] cars) {
-		this.cars = cars;
-	}
-
-	public void setTower(Tower tower) {
-		this.tower = tower;
-	}
-
-	public void setCarChannel(CarChannel[] carChannel) {
-		this.carChannel = carChannel;
-	}
-	
+	/**
+	 * Refresh the UI using new values of cars,tower and carChannel
+	 */
 	public void refresh() {
-		// TODO Auto-generated method stub
+		
+		
 		
 	}
 	
@@ -107,10 +128,15 @@ public class MainWindow extends JFrame{
 
 		@Override
 		public void run() {
-			//MainWindow.this.sim.refresh(MainWindow.this);
 			MainWindow.this.refresh();
 		}
 		
+	}
+	
+	public void setObjects(List<Car> cars, List<CarChannel> carChannel, Tower tower){
+		this.carChannel = carChannel;
+		this.cars = cars;
+		this.tower = tower;
 	}
 	
 
