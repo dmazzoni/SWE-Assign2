@@ -62,7 +62,7 @@ public abstract class SendBehavior {
 	/**
 	 * Schedules the speed update task on this behavior's timer.
 	 */
-	protected abstract void startSpeedUpdates();
+	public abstract void startSpeedUpdates();
 	
 	/**
 	 * Sends the specified {@link OkMessage} to the control tower.

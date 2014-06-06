@@ -57,6 +57,7 @@ public class ManualReceive extends ReceiveBehavior {
 		if (ch != null) {
 			car.setCarChannel(ch);
 			car.setDisplay("Car accepted");
+			car.registered();
 		}
 		else {
 			car.setDisplay("Base station is busy, please wait");

@@ -21,6 +21,10 @@ public abstract class Car {
 		sendBehavior.send(msg);
 	}
 	
+	public void registered() {
+		sendBehavior.startSpeedUpdates();
+	}
+	
 	public int getSpeed() {
 		return speed;
 	}

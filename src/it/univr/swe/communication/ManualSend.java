@@ -21,7 +21,7 @@ public class ManualSend extends SendBehavior {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void startSpeedUpdates() {
+	public void startSpeedUpdates() {
 		timer.schedule(speedTask, 0, SPEED_MSG_INTERVAL);
 	}
 

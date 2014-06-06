@@ -24,7 +24,7 @@ public class SendAdapter extends AutomaticSend {
 	 * Updates are sent at the rate of a manual car.
 	 */
 	@Override
-	protected void startSpeedUpdates() {
+	public void startSpeedUpdates() {
 		timer.schedule(speedTask, 0, ManualSend.SPEED_MSG_INTERVAL);
 	}
 	
