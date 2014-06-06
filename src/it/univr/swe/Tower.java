@@ -158,4 +158,13 @@ public class Tower
 		else
 			throw new IllegalMessageException();
 	}
+	
+	/**
+	 * Method invoked by Simulator to get TowerChannel for adding a Car or 
+	 * for showing the state of all cars
+	 * @return
+	 */
+	public TowerChannel getTowerChannel(){
+		return towerChannel;
+	}
 }

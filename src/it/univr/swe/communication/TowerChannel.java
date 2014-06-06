@@ -48,4 +48,12 @@ public class TowerChannel
 		while(cars.get(++pos).getId() != id);
 		cars.remove(pos);
 	}
+	
+	/**
+	 * Necessary method invoked by MainWindow for getting the list of cars 
+	 * @return List of Car
+	 */
+	public List<Car> getCars(){
+		return cars;
+	}
 }

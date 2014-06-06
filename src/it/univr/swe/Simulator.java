@@ -8,22 +8,26 @@ import it.univr.swe.gui.MainWindow;
 
 public class Simulator extends Thread{
 	
-	Tower tower;
-	List<Car> cars;
-	List<CarChannel> carChannel;
+	private Tower tower;
 
 	public Simulator(){
 		
 		tower = new Tower();
-		cars = new ArrayList<Car>();
-		carChannel = new ArrayList<CarChannel>();
-		
-		
 		
 	}
 
+	
+	/*QUESTO METODO È NECESSARIO!!! 
+	 * Gli oggetti che vengono passati alla main window possono provenire da fonti diverse
+	 * ( ad esempio cars è contenuto in TowerChannel )
+	*/
+
+	/**
+	 * Method invoked by MainWindow to get all the informations that it needs.
+	 * @param mainWindow The MainWindow object
+	 */
 	public void getObjects(MainWindow mainWindow) {
-		mainWindow.setObjects(cars, carChannel, tower);
+		mainWindow.setObjects(tower.getTowerChannel().getCars(),tower);
 	}
 
 	

@@ -4,7 +4,9 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Font;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -33,13 +35,13 @@ public class MainWindow extends JFrame{
 	/***/
 	private Tower tower;
 	/***/
-	private List<CarChannel> carChannel;
-	/***/
 	private JTable table;
 	/***/
 	private JProgressBar[] progress;
 	/***/
 	private JTextArea towerActions;
+	/***/
+	private Map<Integer,Car> rowMap;
 	
 	
 	public MainWindow(Simulator sim){
@@ -133,20 +135,21 @@ public class MainWindow extends JFrame{
 		
 	}
 	
-	public void setObjects(List<Car> cars, List<CarChannel> carChannel, Tower tower){
-		this.carChannel = carChannel;
+	public void setObjects(List<Car> cars, Tower tower){
 		this.cars = cars;
 		this.tower = tower;
+		rowMap = new HashMap<Integer,Car>();
 	}
 	
 
 	public static void main(String args[]){
 		
 		Simulator sim = new Simulator();
-		sim.start();
 		
 		MainWindow main = new MainWindow(sim);
 		main.setVisible(true);
+		
+		sim.start();
 		
 	}
 
