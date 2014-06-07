@@ -3,7 +3,6 @@ package it.univr.swe.gui;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Font;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +12,6 @@ import java.util.TimerTask;
 import it.univr.swe.Car;
 import it.univr.swe.Simulator;
 import it.univr.swe.Tower;
-import it.univr.swe.communication.CarChannel;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -24,7 +22,6 @@ import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
-import javax.swing.JTextPane;
 import javax.swing.table.DefaultTableModel;
 
 @SuppressWarnings("serial")
@@ -47,7 +44,9 @@ public class MainWindow extends JFrame{
 	public MainWindow(Simulator sim){
 		super();
 		
-		sim.getObjects(this);
+		/*Get objects from Simulator*/
+		tower = sim.getTower();
+		cars = tower.getTowerChannel().getCars();
 		
 		this.setSize(900, 500);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -69,11 +68,12 @@ public class MainWindow extends JFrame{
 	                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 			table.setFillsViewportHeight(true); 
 			
-			/*TOWER*/
+			/*LEFT PANEL*/
 			JPanel leftPanel = new JPanel();
 				leftPanel.setLayout(new BoxLayout(leftPanel,BoxLayout.PAGE_AXIS));
 				leftPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
 			
+				/*TOWER*/
 				JLabel tower = new JLabel("Tower Actions");
 				tower.setAlignmentX(Component.CENTER_ALIGNMENT);
 				
@@ -85,6 +85,7 @@ public class MainWindow extends JFrame{
 		        towerActions.setWrapStyleWord(true);
 		        towerActions.setEditable(false);
 				
+		        /*CHANNELS*/
 				JLabel channels = new JLabel("Channels");
 				channels.setAlignmentX(Component.CENTER_ALIGNMENT);
 				
@@ -97,7 +98,7 @@ public class MainWindow extends JFrame{
 					progress[I] = new JProgressBar();
 					progress[I].setMaximum(100);
 					progress[I].setMinimum(0);
-					progress[I].setValue(0);
+					progress[I].setValue((5-I)*20);
 					
 					leftPanel.add(progress[I]);
 				}
@@ -114,7 +115,7 @@ public class MainWindow extends JFrame{
 	}
 	
 	/**
-	 * Refresh the UI using new values of cars,tower and carChannel
+	 * Refreshes the UI using new values of cars,tower and carChannel
 	 */
 	public void refresh() {
 		
@@ -123,8 +124,7 @@ public class MainWindow extends JFrame{
 	}
 	
 	/**
-	 * 
-	 *
+	 * Calls MainWindow.Refresh every 20ms
 	 */
 	private class UploadUI extends TimerTask{
 
@@ -133,14 +133,7 @@ public class MainWindow extends JFrame{
 			MainWindow.this.refresh();
 		}
 		
-	}
-	
-	public void setObjects(List<Car> cars, Tower tower){
-		this.cars = cars;
-		this.tower = tower;
-		rowMap = new HashMap<Integer,Car>();
-	}
-	
+	}	
 
 	public static void main(String args[]){
 		

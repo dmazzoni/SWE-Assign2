@@ -1,11 +1,5 @@
 package it.univr.swe;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import it.univr.swe.communication.CarChannel;
-import it.univr.swe.gui.MainWindow;
-
 public class Simulator extends Thread{
 	
 	private Tower tower;
@@ -24,10 +18,10 @@ public class Simulator extends Thread{
 
 	/**
 	 * Method invoked by MainWindow to get all the informations that it needs.
-	 * @param mainWindow The MainWindow object
+	 * @return The Tower Object
 	 */
-	public void getObjects(MainWindow mainWindow) {
-		mainWindow.setObjects(tower.getTowerChannel().getCars(),tower);
+	public Tower getTower() {
+		return this.tower;
 	}
 
 	
