@@ -11,12 +11,10 @@ import it.univr.swe.messages.SpeedMessage;
 import it.univr.swe.messages.TowerMessage;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.TreeMap;
 
 public class Tower
 {
@@ -27,7 +25,7 @@ public class Tower
 	 * If the Boolean value is set to true, the next sent message alerts the
 	 * specified car to decrease its speed (brake).
 	 */
-	private Map<Integer,Boolean> map;
+	private TreeMap<Integer,Boolean> map;
 	/**
 	 * Array of channels used for the communication from registered cars to
 	 * the tower
@@ -50,14 +48,20 @@ public class Tower
 	 */
 	private Timer timer;
 	
+	/**
+	 * Position of the next map entry to check
+	 */
+	private int next;
+	
 	public Tower()
 	{
-		map = new HashMap<Integer, Boolean>();
+		map = new TreeMap<Integer, Boolean>();
 		carChannels = new ArrayList<CarChannel>();
 		carChannels.add(new CarChannel(this));
 		towerChannel = new TowerChannel(this);
 		buffer = new ArrayList<Message>();
 		timer = new Timer();
+		next = 0; //Invalid value
 		
 		//Set the task
 		TimerTask task = new TimerTask()
@@ -70,30 +74,15 @@ public class Tower
 				{
 					towerChannel.transmit(buffer.remove(0));
 				}
-				else
+				else if(map.size() > 0)
 				{
-					for(Entry<Integer, Boolean> entry : map.entrySet())
-					{
-						towerChannel.transmit(new TowerMessage(entry.getKey(), entry.getValue()));
-						//transmit only the message of the first entry of the map
-						break;
-					}
+					int key = (int) map.keySet().toArray()[next];
+					boolean brake = map.get(key);
+					towerChannel.transmit(new TowerMessage(next, brake));
+					
+					if(++next == map.size())
+						next = 0;
 				}
-				
-				/* Previous version: send every message into the buffer and 
-				 * every message of the map
-				for(Message msg : buffer)
-				{
-					if(msg instanceof RegisterMessage)
-					{
-						towerChannel.transmit(msg);
-					}
-				}
-				//Send the messages based on the map.
-				for(Entry<Integer, Boolean> entry : map.entrySet())
-				{
-					towerChannel.transmit(new TowerMessage(entry.getKey(), entry.getValue()));
-				}*/
 			}
 		};
 		timer.schedule(task, 0, SPEED_MSG_INTERVAL);
