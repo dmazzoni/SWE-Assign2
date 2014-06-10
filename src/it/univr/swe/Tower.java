@@ -54,11 +54,6 @@ public class Tower
 	private Timer timer;
 	
 	/**
-	 * Position of the next map entry to check
-	 */
-	private int next;
-	
-	/**
 	 * Array of actions used by the simulator to show the application status.
 	 */
 	private Vector<String> actions;
@@ -71,39 +66,8 @@ public class Tower
 		towerChannel = new TowerChannel(this);
 		replyBuffer = new ArrayList<Message>();
 		timer = new Timer();
-		next = 0; //Invalid value
 		actions = new Vector<String>();
-		
-		//Set the task
-		TimerTask task = new TimerTask()
-		{
-			@Override
-			public void run()
-			{
-				//If there's a message in the buffer
-				if(replyBuffer.size() > 0)
-				{
-					towerChannel.transmit(replyBuffer.remove(0));
-					actions.add("Tower sent RegisterMessage");
-				}
-				else if(speedMap.size() > 0)
-				{
-					int key = (int) speedMap.keySet().toArray()[next];
-					boolean brake = speedMap.get(key);
-					towerChannel.transmit(new TowerMessage(next, brake));
-					actions.add("Tower sent TowerMessage");
-					
-					if(next == speedMap.size())
-					{
-						towerChannel.transmit(new JoinMessage(towerChannel));
-						next = 0;
-					}
-					
-					next++;
-				}
-			}
-		};
-		timer.schedule(task, 0, SPEED_MSG_INTERVAL);
+		timer.scheduleAtFixedRate(new TowerTask(), 0, SPEED_MSG_INTERVAL);
 	}
 	
 	/**
@@ -224,5 +188,53 @@ public class Tower
 		CarType type = msg.getType();
 		ch.setTraffic(ch.getTraffic() - type.getTraffic());
 		towerChannel.unregisterCar(source);
+	}
+	
+	/**
+	 * Manages the transmission of outgoing messages from the tower.
+	 */
+	private class TowerTask extends TimerTask {
+		
+		/**
+		 * Index of the next speed entry to check.
+		 */
+		int mapIndex;
+		
+		/**
+		 * Constructs a TowerTask.
+		 */
+		private TowerTask() {
+			mapIndex = 0;
+		}
+
+		/**
+		 * Broadcasts a message to all cars.<br>
+		 * Messages are prioritized in the following order:<br>
+		 * <ul>
+		 * <li>{@link RegisterMessage}</li>
+		 * <li>{@link SpeedMessage}</li>
+		 * <li>{@link JoinMessage}</li>
+		 * </ul>
+		 */
+		@Override
+		public void run() {
+			//If there's a message in the buffer
+			if (replyBuffer.size() > 0) {
+				towerChannel.transmit(replyBuffer.remove(0));
+				actions.add("Tower sent RegisterMessage");
+			}
+			else if (speedMap.size() > 0) {
+				int key = (int) speedMap.keySet().toArray()[mapIndex];
+				boolean brake = speedMap.get(key);
+				towerChannel.transmit(new TowerMessage(mapIndex, brake));
+				actions.add("Tower sent TowerMessage");
+				mapIndex++;
+			}
+			
+			if (mapIndex == speedMap.size()) {
+				towerChannel.transmit(new JoinMessage(towerChannel));
+				mapIndex = 0;
+			}
+		}
 	}
 }
