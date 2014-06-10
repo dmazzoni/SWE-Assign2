@@ -38,7 +38,10 @@ public abstract class Car {
 	}
 
 	public void setSpeed(int speed) {
-		this.speed = speed;
+		if(speed < 0)
+			this.speed = 0;
+		else
+			this.speed = speed;
 	}
 	
 	public int getId() {
@@ -68,7 +71,7 @@ public abstract class Car {
 	public void setDisplay(String display) {
 		this.display = display;
 	}
-	
-	protected abstract void exit();
+		
+	public abstract void exit();
 	
 }

@@ -6,10 +6,11 @@ public class AutomaticCar extends Car {
 
 	public AutomaticCar(int id) {
 		this.id = id;
+		this.setDisplay("");
 	}
 	
 	@Override
-	protected void exit() {
+	public void exit() {
 		ExitMessage exitMsg = new ExitMessage(id, CarType.AUTOMATIC, carChannel);
 		sendBehavior.send(exitMsg);
 	}

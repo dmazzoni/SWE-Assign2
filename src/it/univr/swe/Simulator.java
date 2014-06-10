@@ -1,8 +1,12 @@
 package it.univr.swe;
 
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import it.univr.swe.communication.*;
 
-public class Simulator{
+public class Simulator {
 	
 	private Tower tower;
 	private static int id = 1;
@@ -10,26 +14,59 @@ public class Simulator{
 	public Simulator(){
 		
 		tower = new Tower();
-		TowerChannel towerChannel = tower.getTowerChannel();
-		for(int i=0; i<40; i++) {
-			Car c = new AutomaticCar(id++);
-			c.setReceiveBehavior(new AutomaticReceive(c));
-			c.setSendBehavior(new AutomaticSend(c));
-			towerChannel.registerCar(c);
-		}
-		
-		for(int i=0; i<50; i++) {
-			Car c = new ManualCar(id++);
-			c.setReceiveBehavior(new ManualReceive(c));
-			c.setSendBehavior(new ManualSend(c));
-			towerChannel.registerCar(c);
-		}
-		
+		Timer time = new Timer();
+		time.scheduleAtFixedRate(new SimulatorTask(), 0, 20);
+			
 	}
-
-
 	
-	/*QUESTO METODO È NECESSARIO!!! */
+	private class SimulatorTask extends TimerTask {
+
+		private int automaticCars = 0;
+		private int manualCars = 0;
+		private TowerChannel towerChannel;
+	
+		private int count = 0;
+		
+		private SimulatorTask() {
+			this.towerChannel = tower.getTowerChannel();
+		}
+		@Override
+		public void run() {
+			count++;
+			List<Car> cars = towerChannel.getCars();
+			
+			if(automaticCars < 40) {
+				Car c = new AutomaticCar(id++);
+				c.setSpeed(45);
+				c.setReceiveBehavior(new AutomaticReceive(c));
+				c.setSendBehavior(new AutomaticSend(c));
+				towerChannel.registerCar(c);
+				automaticCars++;
+			}
+			if(manualCars < 50) {
+				Car c = new ManualCar(id++);
+				c.setSpeed(45);
+				c.setReceiveBehavior(new ManualReceive(c));
+				c.setSendBehavior(new ManualSend(c));
+				towerChannel.registerCar(c);
+				manualCars++;
+			}
+			for(Car c : cars) {
+				int delta;
+				if(c instanceof ManualCar && c.getDisplay().equals("Decrease speed"))
+					delta = (int)(Math.random()*10) - 10;
+				else 
+					delta = (int)(Math.random()*10) - 5;
+				c.setSpeed(c.getSpeed() + delta);
+			}
+			if(count == 10) {
+				Car c = cars.get((int)Math.random()*(cars.size()-1));
+				c.exit();
+				count = 0;
+			}
+			
+		}
+	}
 
 	/**
 	 * Method invoked by MainWindow to get all the informations that it needs.

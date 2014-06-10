@@ -180,7 +180,7 @@ public class MainWindow extends JFrame{
 				return getHeaderRow(coloumn);
 			}
 			else{
-				return getCarData(cars.get(row),coloumn);
+				return getCarData(cars.get(row - 1),coloumn);
 			}
 		}
 		
