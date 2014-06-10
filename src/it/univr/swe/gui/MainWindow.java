@@ -28,8 +28,6 @@ import javax.swing.table.DefaultTableModel;
 public class MainWindow extends JFrame{
 	
 	/***/
-	private List<Car> cars;
-	/***/
 	private Tower tower;
 	/***/
 	private JTable table;
@@ -46,7 +44,6 @@ public class MainWindow extends JFrame{
 		
 		/*Get objects from Simulator*/
 		tower = sim.getTower();
-		cars = tower.getTowerChannel().getCars();
 		
 		this.setSize(900, 500);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -119,6 +116,11 @@ public class MainWindow extends JFrame{
 	 */
 	public void refresh() {
 		
+		towerActions.append("\n"+tower.getActions());
+		
+		ArrayList<CarChannel> channels = tower.getCarChannels();
+		
+		List<Car> cars = tower.getTowerChannel().getCars();
 		
 		
 	}

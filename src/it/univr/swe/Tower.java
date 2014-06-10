@@ -160,4 +160,12 @@ public class Tower
 	public String getActions(){
 		return null;
 	}
+	
+	/**
+	 * Method invoked by MainWindow to get the value of every Car Channel
+	 * @return The List of carChannels
+	 */
+	public ArrayList<CarChannel> getCarChannels(){
+		return carChannels;
+	}
 }
