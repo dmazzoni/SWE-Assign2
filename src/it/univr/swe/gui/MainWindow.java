@@ -39,8 +39,6 @@ public class MainWindow extends JFrame{
 	private JProgressBar[] progress;
 	/***/
 	private JTextArea towerActions;
-	/***/
-	private List<Car> tableCars;
 	
 	
 	public MainWindow(Simulator sim){
@@ -99,7 +97,7 @@ public class MainWindow extends JFrame{
 					progress[I] = new JProgressBar();
 					progress[I].setMaximum(100);
 					progress[I].setMinimum(0);
-					progress[I].setValue((5-I)*20);
+					progress[I].setValue(0);
 					
 					leftPanel.add(progress[I]);
 				}
@@ -109,8 +107,6 @@ public class MainWindow extends JFrame{
 			internalPanel.add(leftPanel,BorderLayout.LINE_START);
 		
 		this.getContentPane().add(internalPanel);
-		
-		tableCars = new ArrayList<Car>();
 		
 		Timer time = new Timer();
 		time.scheduleAtFixedRate(new UploadUI(), 0, 20);
@@ -122,7 +118,10 @@ public class MainWindow extends JFrame{
 	 */
 	public void refresh() {
 		
-		towerActions.append("\n"+tower.getActions());
+		Vector<String> actions = tower.getActions();
+		for(String s : actions){
+			towerActions.append(s+"\n");
+		}
 		
 		ArrayList<CarChannel> channels = tower.getCarChannels();
 		for(int I = 0;I<channels.size();I++){
@@ -171,42 +170,12 @@ public class MainWindow extends JFrame{
 
 		@Override
 		public int getRowCount() {
-			return cars.size()+1;
+			return cars.size();
 		}
 
 		@Override
 		public Object getValueAt(int row, int coloumn) {
-			if(row == 0){
-				return getHeaderRow(coloumn);
-			}
-			else{
-				return getCarData(cars.get(row - 1),coloumn);
-			}
-		}
-		
-		private Object getHeaderRow(int coloumn) {
-			String result = "";
-			
-			switch(coloumn){
-			case ID:{
-				result = "ID";
-				break;
-			}
-			case SPEED:{
-				result = "Speed";
-				break;
-			}
-			case DISPLAY:{
-				result = "Display";
-				break;
-			}
-			case OTHER:{
-				result = "Other";
-				break;
-			}
-			}
-			
-			return result;
+			return getCarData(cars.get(row),coloumn);
 		}
 
 		private String getCarData(Car car,int coloumn) {
