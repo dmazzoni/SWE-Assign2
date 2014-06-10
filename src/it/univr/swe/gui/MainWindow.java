@@ -141,8 +141,6 @@ public class MainWindow extends JFrame{
 		MainWindow main = new MainWindow(sim);
 		main.setVisible(true);
 		
-		sim.start();
-		
 	}
 	
 	/**
