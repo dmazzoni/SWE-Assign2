@@ -3,15 +3,18 @@ package it.univr.swe.gui;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Font;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.Vector;
 
 import it.univr.swe.Car;
 import it.univr.swe.Simulator;
 import it.univr.swe.Tower;
+import it.univr.swe.communication.CarChannel;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -22,6 +25,7 @@ import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
+import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 
 @SuppressWarnings("serial")
@@ -36,7 +40,7 @@ public class MainWindow extends JFrame{
 	/***/
 	private JTextArea towerActions;
 	/***/
-	private Map<Integer,Car> rowMap;
+	private List<Car> tableCars;
 	
 	
 	public MainWindow(Simulator sim){
@@ -48,7 +52,7 @@ public class MainWindow extends JFrame{
 		this.setSize(900, 500);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		table = new JTable(new DefaultTableModel(new String[]{"Car ID", "Speed","Display","Tipo"},0));
+		table = new JTable(new MyTableModel());
 		
 		JPanel internalPanel = new JPanel();
 		internalPanel.setLayout(new BorderLayout());
@@ -106,6 +110,8 @@ public class MainWindow extends JFrame{
 		
 		this.getContentPane().add(internalPanel);
 		
+		tableCars = new ArrayList<Car>();
+		
 		Timer time = new Timer();
 		time.scheduleAtFixedRate(new UploadUI(), 0, 20);
 		
@@ -119,12 +125,15 @@ public class MainWindow extends JFrame{
 		towerActions.append("\n"+tower.getActions());
 		
 		ArrayList<CarChannel> channels = tower.getCarChannels();
+		for(int I = 0;I<channels.size();I++){
+			progress[I].setValue(channels.get(I).getTraffic());
+		}
 		
-		List<Car> cars = tower.getTowerChannel().getCars();
-		
+		MyTableModel myTableModel = (MyTableModel) table.getModel();
+		myTableModel.updateCars(tower.getTowerChannel().getCars());
 		
 	}
-	
+
 	/**
 	 * Calls MainWindow.Refresh every 20ms
 	 */
@@ -134,6 +143,95 @@ public class MainWindow extends JFrame{
 		public void run() {
 			MainWindow.this.refresh();
 		}
+		
+	}
+	
+	private class MyTableModel extends AbstractTableModel{
+
+		private static final int ID = 0;
+		private static final int SPEED = 1;
+		private static final int DISPLAY = 3;
+		private static final int OTHER = 4;
+		
+		private List<Car> cars;
+
+		@Override
+		public int getColumnCount() {
+			return 4;
+		}
+
+		@Override
+		public int getRowCount() {
+			return cars.size()+1;
+		}
+
+		@Override
+		public Object getValueAt(int row, int coloumn) {
+			if(row == 0){
+				return getHeaderRow(coloumn);
+			}
+			else{
+				return getCarData(cars.get(row),coloumn);
+			}
+		}
+		
+		private Object getHeaderRow(int coloumn) {
+			String result = "";
+			
+			switch(coloumn){
+			case ID:{
+				result = "ID";
+				break;
+			}
+			case SPEED:{
+				result = "Speed";
+				break;
+			}
+			case DISPLAY:{
+				result = "Display";
+				break;
+			}
+			case OTHER:{
+				result = "Other";
+				break;
+			}
+			}
+			
+			return result;
+		}
+
+		private String getCarData(Car car,int coloumn) {
+			String result = "";
+			
+			switch(coloumn){
+			case ID:{
+				result = ""+car.getId();
+				break;
+			}
+			case SPEED:{
+				result = ""+car.getSpeed();
+				break;
+			}
+			case DISPLAY:{
+				result = ""+car.getDisplay();
+				break;
+			}
+			case OTHER:{
+				result = "Other";
+				break;
+			}
+			}
+			
+			return result;
+		}
+
+		public void updateCars(List<Car> cars) {
+			
+			this.cars = cars;
+			this.fireTableDataChanged();
+			
+		}
+		
 		
 	}
 
