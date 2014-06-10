@@ -116,66 +116,33 @@ public class Tower
 		//Choose the action to do switching on the message implementation
 		if(msg instanceof OkMessage)
 		{
-			int id = ((OkMessage) msg).getSource();
-			CarType type = ((OkMessage) msg).getType();
-			RegisterMessage regMsg = null;
-			
-			boolean is_full = true;
-			for(CarChannel ch : carChannels)
-			{
-				if( (100 - ch.getTraffic()) >= type.getTraffic())
-				{
-					is_full = false;
-					ch.setTraffic(ch.getTraffic() + type.getTraffic());
-					regMsg = new RegisterMessage(id, ch);
-					break;
-				}
-			}
-			
-			if(is_full)
-			{
-				if(carChannels.size() < 5)
-				{
-					CarChannel ch = new CarChannel(this);
-					actions.add("Tower created a new CarChannel");
-					ch.setTraffic(ch.getTraffic() + type.getTraffic());
-					regMsg = new RegisterMessage(id, ch);
-					carChannels.add(ch);
-				}
-				else
-					regMsg = new RegisterMessage(id, null);
-			}
-			
-			replyBuffer.add(regMsg);
+			receiveOk((OkMessage) msg);
 		}
 		else if(msg instanceof SpeedMessage)
 		{
-			int source = ((SpeedMessage) msg).getSource();
-			int speed = ((SpeedMessage) msg).getSpeed();
-			speedMap.put(source, (speed > 50) ? true : false);
+			receiveSpeed((SpeedMessage) msg);
 		}
 		else if(msg instanceof ExitMessage)
 		{
-			int source = ((ExitMessage) msg).getSource();
-			CarChannel ch = ((ExitMessage) msg).getChannel();
-			CarType type = ((ExitMessage) msg).getType();
-			ch.setTraffic(ch.getTraffic() - type.getTraffic());
-			towerChannel.unregisterCar(source);
+			receiveExit((ExitMessage) msg);
 		}
 		else
 			throw new IllegalMessageException();
 	}
 	
 	/**
-	 * Method invoked by Simulator to get TowerChannel to add a Car or 
-	 * to show the state of all cars
-	 * @return
+	 * Returns the dedicated tower channel.
+	 * @return The tower channel.
 	 */
 	public TowerChannel getTowerChannel()
 	{
 		return towerChannel;
 	}
 	
+	/**
+	 * Returns the list of actions taken by the tower.
+	 * @return The list of actions.
+	 */
 	public Vector<String> getActions()
 	{
 		Vector<String> result = actions;
@@ -190,5 +157,72 @@ public class Tower
 	public List<CarChannel> getCarChannels()
 	{
 		return carChannels;
+	}
+	
+	/**
+	 * Processes an incoming {@link OkMessage}.<br>
+	 * A {@link RegisterMessage} is prepared in response to the received message,
+	 * and if there are slots left the car is assigned to a channel.
+	 * @param msg the received message
+	 */
+	private void receiveOk(OkMessage msg) {
+		
+		int id = msg.getSource();
+		CarType type = msg.getType();
+		RegisterMessage regMsg = null;
+		
+		boolean is_full = true;
+		for (CarChannel ch : carChannels)
+		{
+			if( (100 - ch.getTraffic()) >= type.getTraffic())
+			{
+				is_full = false;
+				ch.setTraffic(ch.getTraffic() + type.getTraffic());
+				regMsg = new RegisterMessage(id, ch);
+				break;
+			}
+		}
+		
+		if (is_full)
+		{
+			if(carChannels.size() < 5)
+			{
+				CarChannel ch = new CarChannel(this);
+				actions.add("Tower created a new CarChannel");
+				ch.setTraffic(ch.getTraffic() + type.getTraffic());
+				regMsg = new RegisterMessage(id, ch);
+				carChannels.add(ch);
+			}
+			else
+				regMsg = new RegisterMessage(id, null);
+		}
+		
+		replyBuffer.add(regMsg);
+	}
+	
+	/**
+	 * Processes an incoming {@link SpeedMessage}.<br>
+	 * The map of speed statuses is updated according to the specified speed.
+	 * @param msg the received message
+	 */
+	private void receiveSpeed(SpeedMessage msg) {
+		
+		int source = msg.getSource();
+		int speed = msg.getSpeed();
+		speedMap.put(source, (speed > 50) ? true : false);
+	}
+	
+	/**
+	 * Processes an incoming {@link ExitMessage}.<br>
+	 * The car is unregistered from the network, and the slots in its channel are freed.
+	 * @param msg the received message
+	 */
+	private void receiveExit(ExitMessage msg) {
+		
+		int source = msg.getSource();
+		CarChannel ch = msg.getChannel();
+		CarType type = msg.getType();
+		ch.setTraffic(ch.getTraffic() - type.getTraffic());
+		towerChannel.unregisterCar(source);
 	}
 }
