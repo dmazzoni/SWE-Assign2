@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.TreeMap;
+import java.util.Vector;
 
 public class Tower
 {
@@ -53,6 +54,11 @@ public class Tower
 	 */
 	private int next;
 	
+	/**
+	 * Array of actions used by the simulator to show the application run.
+	 */
+	private Vector<String> actions;
+	
 	public Tower()
 	{
 		map = new TreeMap<Integer, Boolean>();
@@ -62,6 +68,7 @@ public class Tower
 		buffer = new ArrayList<Message>();
 		timer = new Timer();
 		next = 0; //Invalid value
+		actions = new Vector<String>();
 		
 		//Set the task
 		TimerTask task = new TimerTask()
@@ -73,12 +80,14 @@ public class Tower
 				if(buffer.size() > 0)
 				{
 					towerChannel.transmit(buffer.remove(0));
+					actions.add("Tower send RegisterMessage");
 				}
 				else if(map.size() > 0)
 				{
 					int key = (int) map.keySet().toArray()[next];
 					boolean brake = map.get(key);
 					towerChannel.transmit(new TowerMessage(next, brake));
+					actions.add("Tower send TowerMessage");
 					
 					if(++next == map.size())
 						next = 0;
@@ -120,6 +129,7 @@ public class Tower
 				if(carChannels.size() < 5)
 				{
 					CarChannel ch = new CarChannel(this);
+					actions.add("Tower create new CarChannel");
 					ch.setTraffic(ch.getTraffic() + type.getTraffic());
 					regMsg = new RegisterMessage(id, ch);
 					carChannels.add(ch);
@@ -153,7 +163,24 @@ public class Tower
 	 * for showing the state of all cars
 	 * @return
 	 */
-	public TowerChannel getTowerChannel(){
+	public TowerChannel getTowerChannel()
+	{
 		return towerChannel;
+	}
+	
+	public Vector<String> getActions()
+	{
+		Vector<String> result = actions;
+		actions = new Vector<String>();
+		return result;
+	}
+	
+	/**
+	 * Method invoked by MainWindow to get the value of every CarChannel
+	 * @return The List of carChannels
+	 */
+	public ArrayList<CarChannel> getCarChannels()
+	{
+		return carChannels;
 	}
 }
