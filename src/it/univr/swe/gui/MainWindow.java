@@ -133,7 +133,18 @@ public class MainWindow extends JFrame{
 		myTableModel.updateCars(tower.getTowerChannel().getCars());
 		
 	}
-
+	
+	public static void main(String args[]){
+		
+		Simulator sim = new Simulator();
+		
+		MainWindow main = new MainWindow(sim);
+		main.setVisible(true);
+		
+		sim.start();
+		
+	}
+	
 	/**
 	 * Calls MainWindow.Refresh every 20ms
 	 */

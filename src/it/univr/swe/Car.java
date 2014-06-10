@@ -29,6 +29,14 @@ public abstract class Car {
 		return speed;
 	}
 	
+	public void setSendBehavior(SendBehavior sendBehavior) {
+		this.sendBehavior = sendBehavior;
+	}
+
+	public void setReceiveBehavior(ReceiveBehavior receiveBehavior) {
+		this.receiveBehavior = receiveBehavior;
+	}
+
 	public void setSpeed(int speed) {
 		this.speed = speed;
 	}

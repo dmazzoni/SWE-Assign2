@@ -1,27 +1,33 @@
 package it.univr.swe;
 
-import it.univr.swe.gui.MainWindow;
+import it.univr.swe.communication.*;
 
-public class Simulator extends Thread{
+public class Simulator{
 	
 	private Tower tower;
+	private static int id = 1;
 
 	public Simulator(){
 		
 		tower = new Tower();
+		TowerChannel towerChannel = tower.getTowerChannel();
+		for(int i=0; i<40; i++) {
+			Car c = new AutomaticCar(id++);
+			c.setReceiveBehavior(new AutomaticReceive(c));
+			c.setSendBehavior(new AutomaticSend(c));
+			towerChannel.registerCar(c);
+		}
+		
+		for(int i=0; i<50; i++) {
+			Car c = new ManualCar(id++);
+			c.setReceiveBehavior(new ManualReceive(c));
+			c.setSendBehavior(new ManualSend(c));
+			towerChannel.registerCar(c);
+		}
 		
 	}
 
-	public static void main(String args[]){
-		
-		Simulator sim = new Simulator();
-		
-		MainWindow main = new MainWindow(sim);
-		main.setVisible(true);
-		
-		sim.start();
-		
-	}
+
 	
 	/*QUESTO METODO È NECESSARIO!!! */
 
