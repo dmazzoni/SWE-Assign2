@@ -11,7 +11,7 @@ public class ManualSend extends SendBehavior {
 	/**
 	 * The interval between speed messages, in milliseconds
 	 */
-	protected static final int SPEED_MSG_INTERVAL = 200;
+	protected static final int SPEED_MSG_INTERVAL = 2000;
 	
 	public ManualSend(Car car) {
 		super(car);

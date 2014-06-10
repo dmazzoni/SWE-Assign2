@@ -19,7 +19,7 @@ import java.util.Vector;
 
 public class Tower
 {
-	private static final int SPEED_MSG_INTERVAL = 50;
+	private static final int SPEED_MSG_INTERVAL = 500;
 	
 	/**
 	 * Map to take trace of the speed of every registered car in the system.

@@ -12,6 +12,7 @@ import java.util.TimerTask;
 import java.util.Vector;
 
 import it.univr.swe.Car;
+import it.univr.swe.ManualCar;
 import it.univr.swe.Simulator;
 import it.univr.swe.Tower;
 import it.univr.swe.communication.CarChannel;
@@ -158,8 +159,8 @@ public class MainWindow extends JFrame{
 
 		private static final int ID = 0;
 		private static final int SPEED = 1;
-		private static final int DISPLAY = 3;
-		private static final int OTHER = 4;
+		private static final int DISPLAY = 2;
+		private static final int OTHER = 3;
 		
 		private List<Car> cars;
 
@@ -195,7 +196,12 @@ public class MainWindow extends JFrame{
 				break;
 			}
 			case OTHER:{
-				result = "Other";
+				if( car instanceof ManualCar){
+					result = "Manual";
+				}
+				else{
+					result = "Automatic";
+				}
 				break;
 			}
 			}

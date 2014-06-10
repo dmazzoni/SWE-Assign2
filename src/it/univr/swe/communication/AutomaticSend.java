@@ -11,7 +11,7 @@ public class AutomaticSend extends SendBehavior {
 	/**
 	 * The interval between speed messages, in milliseconds
 	 */
-	protected static final int SPEED_MSG_INTERVAL = 100;
+	protected static final int SPEED_MSG_INTERVAL = 1000;
 	
 	public AutomaticSend(Car car) {
 		super(car);

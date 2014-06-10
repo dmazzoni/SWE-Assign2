@@ -15,7 +15,7 @@ public class Simulator {
 		
 		tower = new Tower();
 		Timer time = new Timer();
-		time.scheduleAtFixedRate(new SimulatorTask(), 0, 20);
+		time.scheduleAtFixedRate(new SimulatorTask(), 0, 3000);
 			
 	}
 	
@@ -56,7 +56,7 @@ public class Simulator {
 				if(c instanceof ManualCar && c.getDisplay().equals("Decrease speed"))
 					delta = (int)(Math.random()*10) - 10;
 				else 
-					delta = (int)(Math.random()*10) - 5;
+					delta = (int)(Math.random()*10) - 4;
 				c.setSpeed(c.getSpeed() + delta);
 			}
 			if(count == 10) {
