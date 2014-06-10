@@ -4,6 +4,7 @@ import it.univr.swe.communication.CarChannel;
 import it.univr.swe.communication.TowerChannel;
 import it.univr.swe.exception.IllegalMessageException;
 import it.univr.swe.messages.ExitMessage;
+import it.univr.swe.messages.JoinMessage;
 import it.univr.swe.messages.Message;
 import it.univr.swe.messages.OkMessage;
 import it.univr.swe.messages.RegisterMessage;
@@ -89,8 +90,13 @@ public class Tower
 					towerChannel.transmit(new TowerMessage(next, brake));
 					actions.add("Tower send TowerMessage");
 					
-					if(++next == map.size())
+					if(next == map.size())
+					{
+						towerChannel.transmit(new JoinMessage(towerChannel));
 						next = 0;
+					}
+					
+					next++;
 				}
 			}
 		};
