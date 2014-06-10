@@ -3,10 +3,7 @@ package it.univr.swe.gui;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Font;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Vector;
@@ -27,7 +24,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableModel;
 
 @SuppressWarnings("serial")
 public class MainWindow extends JFrame{
@@ -124,7 +120,7 @@ public class MainWindow extends JFrame{
 			towerActions.append(s+"\n");
 		}
 		
-		ArrayList<CarChannel> channels = tower.getCarChannels();
+		List<CarChannel> channels = tower.getCarChannels();
 		for(int I = 0;I<channels.size();I++){
 			progress[I].setValue(channels.get(I).getTraffic());
 		}

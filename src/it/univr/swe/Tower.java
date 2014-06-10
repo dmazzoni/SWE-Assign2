@@ -13,6 +13,7 @@ import it.univr.swe.messages.TowerMessage;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.TreeMap;
@@ -27,23 +28,25 @@ public class Tower
 	 * If the Boolean value is set to true, the next sent message alerts the
 	 * specified car to decrease its speed (brake).
 	 */
-	private TreeMap<Integer,Boolean> map;
+	private Map<Integer,Boolean> speedMap;
+	
 	/**
 	 * Array of channels used for the communication from registered cars to
 	 * the tower
 	 */
-	private ArrayList<CarChannel> carChannels;
+	private List<CarChannel> carChannels;
+	
 	/**
 	 * Reference to the channel dedicated to the broadcast communication at
 	 * every registered car.
 	 */
 	private TowerChannel towerChannel;
+	
 	/**
-	 * Buffer for the messages created in response to an invocation of the
-	 * method receive. The tower send them all on the next signal by the
-	 * internal timer. 
+	 * Buffer for the messages created in response to invocations of the
+	 * receive() method. 
 	 */
-	private List<Message> buffer;
+	private List<Message> replyBuffer;
 	
 	/**
 	 * Timer for the transmission interval of the messages.
@@ -56,17 +59,17 @@ public class Tower
 	private int next;
 	
 	/**
-	 * Array of actions used by the simulator to show the application run.
+	 * Array of actions used by the simulator to show the application status.
 	 */
 	private Vector<String> actions;
 	
 	public Tower()
 	{
-		map = new TreeMap<Integer, Boolean>();
+		speedMap = new TreeMap<Integer, Boolean>();
 		carChannels = new ArrayList<CarChannel>();
 		carChannels.add(new CarChannel(this));
 		towerChannel = new TowerChannel(this);
-		buffer = new ArrayList<Message>();
+		replyBuffer = new ArrayList<Message>();
 		timer = new Timer();
 		next = 0; //Invalid value
 		actions = new Vector<String>();
@@ -77,20 +80,20 @@ public class Tower
 			@Override
 			public void run()
 			{
-				//If there's some message into the buffer
-				if(buffer.size() > 0)
+				//If there's a message in the buffer
+				if(replyBuffer.size() > 0)
 				{
-					towerChannel.transmit(buffer.remove(0));
-					actions.add("Tower send RegisterMessage");
+					towerChannel.transmit(replyBuffer.remove(0));
+					actions.add("Tower sent RegisterMessage");
 				}
-				else if(map.size() > 0)
+				else if(speedMap.size() > 0)
 				{
-					int key = (int) map.keySet().toArray()[next];
-					boolean brake = map.get(key);
+					int key = (int) speedMap.keySet().toArray()[next];
+					boolean brake = speedMap.get(key);
 					towerChannel.transmit(new TowerMessage(next, brake));
-					actions.add("Tower send TowerMessage");
+					actions.add("Tower sent TowerMessage");
 					
-					if(next == map.size())
+					if(next == speedMap.size())
 					{
 						towerChannel.transmit(new JoinMessage(towerChannel));
 						next = 0;
@@ -104,9 +107,8 @@ public class Tower
 	}
 	
 	/**
-	 * Method invoked by channels to transfer a messages from cars
-	 * to the tower.
-	 * @param msg	the message to transfer
+	 * Method invoked by channels to transfer a message from cars to the tower.
+	 * @param msg the message to transfer
 	 * @throws IllegalMessageException
 	 */
 	public void receive(Message msg) throws IllegalMessageException
@@ -135,7 +137,7 @@ public class Tower
 				if(carChannels.size() < 5)
 				{
 					CarChannel ch = new CarChannel(this);
-					actions.add("Tower create new CarChannel");
+					actions.add("Tower created a new CarChannel");
 					ch.setTraffic(ch.getTraffic() + type.getTraffic());
 					regMsg = new RegisterMessage(id, ch);
 					carChannels.add(ch);
@@ -144,13 +146,13 @@ public class Tower
 					regMsg = new RegisterMessage(id, null);
 			}
 			
-			buffer.add(regMsg);
+			replyBuffer.add(regMsg);
 		}
 		else if(msg instanceof SpeedMessage)
 		{
 			int source = ((SpeedMessage) msg).getSource();
 			int speed = ((SpeedMessage) msg).getSpeed();
-			map.put(source, (speed > 50) ? true : false);
+			speedMap.put(source, (speed > 50) ? true : false);
 		}
 		else if(msg instanceof ExitMessage)
 		{
@@ -165,8 +167,8 @@ public class Tower
 	}
 	
 	/**
-	 * Method invoked by Simulator to get TowerChannel for adding a Car or 
-	 * for showing the state of all cars
+	 * Method invoked by Simulator to get TowerChannel to add a Car or 
+	 * to show the state of all cars
 	 * @return
 	 */
 	public TowerChannel getTowerChannel()
@@ -185,7 +187,7 @@ public class Tower
 	 * Method invoked by MainWindow to get the value of every CarChannel
 	 * @return The List of carChannels
 	 */
-	public ArrayList<CarChannel> getCarChannels()
+	public List<CarChannel> getCarChannels()
 	{
 		return carChannels;
 	}
