@@ -23,10 +23,7 @@ public class Simulator extends Thread{
 		
 	}
 	
-	/*QUESTO METODO È NECESSARIO!!! 
-	 * Gli oggetti che vengono passati alla main window possono provenire da fonti diverse
-	 * ( ad esempio cars è contenuto in TowerChannel )
-	*/
+	/*QUESTO METODO È NECESSARIO!!! */
 
 	/**
 	 * Method invoked by MainWindow to get all the informations that it needs.
