@@ -156,4 +156,8 @@ public class Tower
 	public TowerChannel getTowerChannel(){
 		return towerChannel;
 	}
+	
+	public String getActions(){
+		return null;
+	}
 }
