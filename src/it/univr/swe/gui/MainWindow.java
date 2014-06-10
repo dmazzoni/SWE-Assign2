@@ -105,6 +105,7 @@ public class MainWindow extends JFrame{
 		
 		this.getContentPane().add(internalPanel);
 		
+		/*Create and Start UploadUI Timer Task*/
 		Timer time = new Timer();
 		time.scheduleAtFixedRate(new UploadUI(), 0, 20);
 		
@@ -130,6 +131,10 @@ public class MainWindow extends JFrame{
 		
 	}
 	
+	/**
+	 * The Main
+	 * @param args
+	 */
 	public static void main(String args[]){
 		
 		Simulator sim = new Simulator();
@@ -156,7 +161,9 @@ public class MainWindow extends JFrame{
 		private static final int ID = 0;
 		private static final int SPEED = 1;
 		private static final int DISPLAY = 2;
-		private static final int OTHER = 3;
+		private static final int AUTOMAN = 3;
+		
+		private final String[] HEADERNAMES = {"ID","Speed","Display","Auto-Man"};
 		
 		private List<Car> cars;
 
@@ -171,14 +178,14 @@ public class MainWindow extends JFrame{
 		}
 
 		@Override
-		public Object getValueAt(int row, int coloumn) {
-			return getCarData(cars.get(row),coloumn);
+		public Object getValueAt(int row, int column) {
+			return getCarData(cars.get(row),column);
 		}
 
-		private String getCarData(Car car,int coloumn) {
+		private String getCarData(Car car,int column) {
 			String result = "";
 			
-			switch(coloumn){
+			switch(column){
 			case ID:{
 				result = ""+car.getId();
 				break;
@@ -191,7 +198,7 @@ public class MainWindow extends JFrame{
 				result = ""+car.getDisplay();
 				break;
 			}
-			case OTHER:{
+			case AUTOMAN:{
 				if( car instanceof ManualCar){
 					result = "Manual";
 				}
@@ -210,6 +217,11 @@ public class MainWindow extends JFrame{
 			this.cars = cars;
 			this.fireTableDataChanged();
 			
+		}
+		
+		public String getColumnName(int column)
+		{ 
+			return HEADERNAMES[column];  
 		}
 		
 		
