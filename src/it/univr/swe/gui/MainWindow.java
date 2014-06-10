@@ -133,17 +133,6 @@ public class MainWindow extends JFrame{
 			MainWindow.this.refresh();
 		}
 		
-	}	
-
-	public static void main(String args[]){
-		
-		Simulator sim = new Simulator();
-		
-		MainWindow main = new MainWindow(sim);
-		main.setVisible(true);
-		
-		sim.start();
-		
 	}
 
 }

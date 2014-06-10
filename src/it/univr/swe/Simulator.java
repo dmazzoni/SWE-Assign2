@@ -1,5 +1,7 @@
 package it.univr.swe;
 
+import it.univr.swe.gui.MainWindow;
+
 public class Simulator extends Thread{
 	
 	private Tower tower;
@@ -10,6 +12,16 @@ public class Simulator extends Thread{
 		
 	}
 
+	public static void main(String args[]){
+		
+		Simulator sim = new Simulator();
+		
+		MainWindow main = new MainWindow(sim);
+		main.setVisible(true);
+		
+		sim.start();
+		
+	}
 	
 	/*QUESTO METODO È NECESSARIO!!! 
 	 * Gli oggetti che vengono passati alla main window possono provenire da fonti diverse
