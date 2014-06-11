@@ -189,7 +189,7 @@ public class Tower
 		ch.setTraffic(ch.getTraffic() - type.getTraffic());
 		speedMap.remove(source);
 		towerChannel.unregisterCar(source);
-		actions.add("Tower received ExitMessage from Car #" + msg.getSource());
+		actions.add("Car " + msg.getSource() + " left the network");
 	}
 	
 	/**
@@ -222,15 +222,21 @@ public class Tower
 		public void run() {
 			//If there's a message in the buffer
 			if (replyBuffer.size() > 0) {
-				towerChannel.transmit(replyBuffer.remove(0));
-				actions.add("Tower sent RegisterMessage");
+				Message msg = replyBuffer.remove(0);
+				towerChannel.transmit(msg);
+				if (msg instanceof RegisterMessage) {
+					RegisterMessage regMsg = (RegisterMessage) msg;
+					if (regMsg.getChannel() != null)
+						actions.add("Car " + regMsg.getDestination() + " entered into the network");
+					else
+						actions.add("Car " + regMsg.getDestination() + " is waiting to enter");
+				}
 			}
 			else if (speedMap.size() > 0) {
 				int key = (int) speedMap.keySet().toArray()[mapIndex];
 				boolean brake = speedMap.get(key);
 				TowerMessage msg = new TowerMessage(key, brake);
 				towerChannel.transmit(msg);
-				actions.add("Tower sent TowerMessage to Car #" + msg.getDestination());
 				mapIndex++;
 			}
 			
