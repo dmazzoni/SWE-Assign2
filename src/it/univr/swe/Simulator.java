@@ -65,8 +65,10 @@ public class Simulator {
 				c.setSpeed(c.getSpeed() + delta);
 			}
 			if(count == 5) {
-				Car c = cars.get((int)(Math.random()*(cars.size()-1)));
-				c.exit();
+				if (cars.size() > 0) {
+					Car c = cars.get((int)(Math.random()*(cars.size()-1)));
+					c.exit();
+				}
 				count = 0;
 			}
 			
