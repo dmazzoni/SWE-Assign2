@@ -17,7 +17,6 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.TreeMap;
-import java.util.Vector;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Tower
@@ -189,6 +188,7 @@ public class Tower
 		CarType type = msg.getType();
 		ch.setTraffic(ch.getTraffic() - type.getTraffic());
 		towerChannel.unregisterCar(source);
+		actions.add("Tower received ExitMessage from Car #" + msg.getSource());
 	}
 	
 	/**
