@@ -63,6 +63,10 @@ public abstract class Car {
 	public void setTowerChannel(TowerChannel towerChannel) {
 		this.towerChannel = towerChannel;
 	}
+	
+	public boolean isRegistered() {
+		return carChannel != null;
+	}
 
 	public String getDisplay() {
 		return display;
