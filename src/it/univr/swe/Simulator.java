@@ -6,6 +6,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import it.univr.swe.communication.*;
+import it.univr.swe.gui.InfoBean;
 
 public class Simulator {
 	
@@ -63,7 +64,7 @@ public class Simulator {
 					delta = (int)(Math.random()*10) - 4;
 				c.setSpeed(c.getSpeed() + delta);
 			}
-			if(count == 10) {
+			if(count == 5) {
 				Car c = cars.get((int)(Math.random()*(cars.size()-1)));
 				c.exit();
 				count = 0;
@@ -71,6 +72,10 @@ public class Simulator {
 			
 		}
 		
+		/**
+		 * Method that return only the cars that are registered in the network
+		 * @return A List of registered cars
+		 */
 		public List<Car> getRegisteredCars(){
 			List<Car> allCars = towerChannel.getCars();
 			List<Car> registeredCars = new ArrayList<Car>();
@@ -84,11 +89,14 @@ public class Simulator {
 	}
 
 	/**
-	 * Method invoked by MainWindow to get all the informations that it needs.
-	 * @return The Tower Object
+	 * Method invoked by MainWindow to get all the data that needs
+	 * @return The InfoBean
 	 */
-	public Tower getTower() {
-		return this.tower;
+	public InfoBean getInfoBean() {
+		List<Car> cars = tower.getTowerChannel().getCars();
+		List<String> newActions = tower.getActions();
+		List<CarChannel> channels = tower.getCarChannels();
+		return new InfoBean(cars,newActions,channels);
 	}
 
 	

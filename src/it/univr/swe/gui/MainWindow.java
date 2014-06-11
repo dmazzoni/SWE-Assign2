@@ -28,8 +28,9 @@ import javax.swing.table.AbstractTableModel;
 @SuppressWarnings("serial")
 public class MainWindow extends JFrame{
 	
-	/***/
-	private Tower tower;
+	private static final int REFRESH_TIME = 20;
+	
+	private Simulator sim;
 	/***/
 	private JTable table;
 	/***/
@@ -41,8 +42,7 @@ public class MainWindow extends JFrame{
 	public MainWindow(Simulator sim){
 		super();
 		
-		/*Get objects from Simulator*/
-		tower = sim.getTower();
+		this.sim = sim;
 		
 		this.setSize(900, 500);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -107,7 +107,7 @@ public class MainWindow extends JFrame{
 		
 		/*Create and Start UploadUI Timer Task*/
 		Timer time = new Timer();
-		time.scheduleAtFixedRate(new UploadUI(), 0, 10);
+		time.scheduleAtFixedRate(new UploadUI(), 0, REFRESH_TIME);
 		
 	}
 	
@@ -116,18 +116,20 @@ public class MainWindow extends JFrame{
 	 */
 	public void refresh() {
 		
-		List<String> actions = tower.getActions();
+		InfoBean infoBean = sim.getInfoBean();
+		
+		List<String> actions = infoBean.getNewActions();
 		for(String s : actions){
 			towerActions.setText(s+"\n"+towerActions.getText());
 		}
 		
-		List<CarChannel> channels = tower.getCarChannels();
-		for(int I = 0;I<channels.size();I++){
-			progress[I].setValue(channels.get(I).getTraffic());
+		List<CarChannel> traffics = infoBean.getTraffics();
+		for(int I = 0;I<traffics.size();I++){
+			progress[I].setValue(traffics.get(I).getTraffic());
 		}
 		
 		MyTableModel myTableModel = (MyTableModel) table.getModel();
-		myTableModel.updateCars(tower.getTowerChannel().getCars());
+		myTableModel.updateCars(infoBean.getCars());
 		
 	}
 	
@@ -145,7 +147,7 @@ public class MainWindow extends JFrame{
 	}
 	
 	/**
-	 * Calls MainWindow.Refresh every 20ms
+	 * Calls MainWindow.Refresh every 10ms
 	 */
 	private class UploadUI extends TimerTask{
 
