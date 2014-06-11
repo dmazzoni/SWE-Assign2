@@ -35,7 +35,6 @@ public class Simulator {
 		@Override
 		public void run() {
 			count++;
-			List<Car> cars = towerChannel.getCars();
 			
 			if(automaticCars < 40) {
 				Car c = new AutomaticCar(id++);
@@ -53,6 +52,9 @@ public class Simulator {
 				towerChannel.registerCar(c);
 				manualCars++;
 			}
+			
+			List<Car> cars = getRegisteredCars();
+			
 			for(Car c : cars) {
 				int delta;
 				if(c instanceof ManualCar && c.getDisplay().equals("Decrease speed"))
@@ -69,15 +71,15 @@ public class Simulator {
 			
 		}
 		
-		public List<Car> getRegisterCars(){
+		public List<Car> getRegisteredCars(){
 			List<Car> allCars = towerChannel.getCars();
 			List<Car> registeredCars = new ArrayList<Car>();
 			for(Car c : allCars){
-				if(c.isRegister()){
+				if(c.isRegistered()){
 					registeredCars.add(c);
 				}
 			}
-			
+			return registeredCars;
 		}
 	}
 
