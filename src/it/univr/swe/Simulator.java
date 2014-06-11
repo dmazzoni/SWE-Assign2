@@ -1,5 +1,6 @@
 package it.univr.swe;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -30,6 +31,7 @@ public class Simulator {
 		private SimulatorTask() {
 			this.towerChannel = tower.getTowerChannel();
 		}
+		
 		@Override
 		public void run() {
 			count++;
@@ -60,9 +62,20 @@ public class Simulator {
 				c.setSpeed(c.getSpeed() + delta);
 			}
 			if(count == 10) {
-				Car c = cars.get((int)Math.random()*(cars.size()-1));
+				Car c = cars.get((int)(Math.random()*(cars.size()-1)));
 				c.exit();
 				count = 0;
+			}
+			
+		}
+		
+		public List<Car> getRegisterCars(){
+			List<Car> allCars = towerChannel.getCars();
+			List<Car> registeredCars = new ArrayList<Car>();
+			for(Car c : allCars){
+				if(c.isRegister()){
+					registeredCars.add(c);
+				}
 			}
 			
 		}
