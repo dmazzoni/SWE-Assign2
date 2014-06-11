@@ -39,7 +39,7 @@ public class AutomaticReceive extends ReceiveBehavior {
 		
 		if (msg.isBrake()) {
 			car.setDisplay("Decrease speed");
-			car.setSpeed(50);
+			car.setSpeed(45);
 		}
 		else {
 			car.setDisplay("Ideal");

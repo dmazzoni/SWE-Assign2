@@ -15,7 +15,7 @@ public class Simulator {
 		
 		tower = new Tower();
 		Timer time = new Timer();
-		time.scheduleAtFixedRate(new SimulatorTask(), 0, 3000);
+		time.scheduleAtFixedRate(new SimulatorTask(), 0, 1000);
 			
 	}
 	

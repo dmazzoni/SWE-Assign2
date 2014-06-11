@@ -21,7 +21,7 @@ import java.util.Vector;
 
 public class Tower
 {
-	private static final int SPEED_MSG_INTERVAL = 500;
+	private static final int SPEED_MSG_INTERVAL = 10;
 	
 	/**
 	 * Map to take trace of the speed of every registered car in the system.
@@ -226,8 +226,9 @@ public class Tower
 			else if (speedMap.size() > 0) {
 				int key = (int) speedMap.keySet().toArray()[mapIndex];
 				boolean brake = speedMap.get(key);
-				towerChannel.transmit(new TowerMessage(mapIndex, brake));
-				actions.add("Tower sent TowerMessage");
+				TowerMessage msg = new TowerMessage(key, brake);
+				towerChannel.transmit(msg);
+				actions.add("Tower sent TowerMessage to Car #" + msg.getDestination());
 				mapIndex++;
 			}
 			

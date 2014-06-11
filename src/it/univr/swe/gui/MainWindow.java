@@ -107,7 +107,7 @@ public class MainWindow extends JFrame{
 		
 		/*Create and Start UploadUI Timer Task*/
 		Timer time = new Timer();
-		time.scheduleAtFixedRate(new UploadUI(), 0, 20);
+		time.scheduleAtFixedRate(new UploadUI(), 0, 10);
 		
 	}
 	
