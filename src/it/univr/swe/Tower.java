@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Tower
@@ -60,7 +60,7 @@ public class Tower
 	
 	public Tower()
 	{
-		speedMap = new TreeMap<Integer, Boolean>();
+		speedMap = new ConcurrentHashMap<Integer, Boolean>();
 		carChannels = new ArrayList<CarChannel>();
 		carChannels.add(new CarChannel(this));
 		towerChannel = new TowerChannel(this);
@@ -187,6 +187,7 @@ public class Tower
 		CarChannel ch = msg.getChannel();
 		CarType type = msg.getType();
 		ch.setTraffic(ch.getTraffic() - type.getTraffic());
+		speedMap.remove(source);
 		towerChannel.unregisterCar(source);
 		actions.add("Tower received ExitMessage from Car #" + msg.getSource());
 	}
