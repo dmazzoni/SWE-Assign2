@@ -118,7 +118,7 @@ public class MainWindow extends JFrame{
 		
 		List<String> actions = tower.getActions();
 		for(String s : actions){
-			towerActions.append("\n"+s);
+			towerActions.setText(s+"\n"+towerActions.getText());
 			//towerActions.setCaretPosition(towerActions.getText().length());
 		}
 		
