@@ -57,7 +57,7 @@ public class AutomaticSend extends SendBehavior {
 	@Override
 	protected void sendExit(ExitMessage msg) {
 		timer.cancel();
-		TowerChannel ch = car.getTowerChannel();
+		CarChannel ch = car.getCarChannel();
 		if (ch != null)
 			ch.transmit(msg);
 	}

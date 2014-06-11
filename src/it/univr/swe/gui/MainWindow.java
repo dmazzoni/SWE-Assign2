@@ -3,10 +3,10 @@ package it.univr.swe.gui;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Font;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import it.univr.swe.Car;
 import it.univr.swe.ManualCar;
@@ -119,7 +119,6 @@ public class MainWindow extends JFrame{
 		List<String> actions = tower.getActions();
 		for(String s : actions){
 			towerActions.setText(s+"\n"+towerActions.getText());
-			//towerActions.setCaretPosition(s.length()+towerActions.getCaretPosition());
 		}
 		
 		List<CarChannel> channels = tower.getCarChannels();
@@ -169,7 +168,7 @@ public class MainWindow extends JFrame{
 		private List<Car> cars;
 		
 		public MyTableModel(){
-			cars = new ArrayList<Car>();
+			cars = new CopyOnWriteArrayList<Car>();
 		}
 
 		@Override
@@ -184,7 +183,11 @@ public class MainWindow extends JFrame{
 
 		@Override
 		public Object getValueAt(int row, int column) {
-			return getCarData(cars.get(row),column);
+			try {
+				return getCarData(cars.get(row),column);
+			} catch (ArrayIndexOutOfBoundsException e) {
+				return null;
+			}
 		}
 
 		private String getCarData(Car car,int column) {
