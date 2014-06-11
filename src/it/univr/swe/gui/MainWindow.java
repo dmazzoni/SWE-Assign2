@@ -119,7 +119,7 @@ public class MainWindow extends JFrame{
 		List<String> actions = tower.getActions();
 		for(String s : actions){
 			towerActions.setText(s+"\n"+towerActions.getText());
-			//towerActions.setCaretPosition(towerActions.getText().length());
+			//towerActions.setCaretPosition(s.length()+towerActions.getCaretPosition());
 		}
 		
 		List<CarChannel> channels = tower.getCarChannels();
