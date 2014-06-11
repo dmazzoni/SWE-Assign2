@@ -18,11 +18,12 @@ public class AutomaticReceive extends ReceiveBehavior {
 	@Override
 	protected void receiveJoin(JoinMessage msg) {
 		
-		if (car.getCarChannel() == null) {
+		if (car.getCarChannel() == null && joinReceived == false) {
 			TowerChannel ch = msg.getChannel();
 			car.setTowerChannel(ch);
 			OkMessage reply = new OkMessage(car.getId(), CarType.AUTOMATIC);
 			car.send(reply);
+			joinReceived = true;
 		}
 	}
 
@@ -62,6 +63,7 @@ public class AutomaticReceive extends ReceiveBehavior {
 		}
 		else {
 			car.setDisplay("Base station is busy, please wait");
+			joinReceived = false;
 		}
 	}
 

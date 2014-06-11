@@ -13,6 +13,8 @@ public abstract class ReceiveBehavior {
 	 * The car associated to this behavior instance
 	 */
 	protected Car car;
+	
+	protected boolean joinReceived;
 
 	/**
 	 * Constructs a behavior instance.
@@ -20,6 +22,7 @@ public abstract class ReceiveBehavior {
 	 */
 	protected ReceiveBehavior(Car car) {
 		this.car = car;
+		joinReceived = false;
 	}
 	
 	/**
