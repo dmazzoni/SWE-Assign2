@@ -56,7 +56,7 @@ public class AutomaticReceive extends ReceiveBehavior {
 			return;
 		
 		CarChannel ch = msg.getChannel();
-		if (!car.isRegistered()) {
+		if (ch != null) {
 			car.setCarChannel(ch);
 			car.setDisplay("Car accepted");
 			car.registered();
