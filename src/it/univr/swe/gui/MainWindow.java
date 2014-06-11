@@ -11,7 +11,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import it.univr.swe.Car;
 import it.univr.swe.ManualCar;
 import it.univr.swe.Simulator;
-import it.univr.swe.Tower;
 import it.univr.swe.communication.CarChannel;
 
 import javax.swing.BorderFactory;

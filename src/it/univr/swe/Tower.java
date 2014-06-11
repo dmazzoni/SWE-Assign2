@@ -233,11 +233,16 @@ public class Tower
 				}
 			}
 			else if (speedMap.size() > 0) {
-				int key = (int) speedMap.keySet().toArray()[mapIndex];
-				boolean brake = speedMap.get(key);
-				TowerMessage msg = new TowerMessage(key, brake);
-				towerChannel.transmit(msg);
-				mapIndex++;
+				Object[] keys = speedMap.keySet().toArray();
+				if (mapIndex >= keys.length)
+					mapIndex = 0;
+				else {
+					int key = (int) keys[mapIndex];
+					boolean brake = speedMap.get(key);
+					TowerMessage msg = new TowerMessage(key, brake);
+					towerChannel.transmit(msg);
+					mapIndex++;
+				}
 			}
 			
 			if (mapIndex == speedMap.size()) {
