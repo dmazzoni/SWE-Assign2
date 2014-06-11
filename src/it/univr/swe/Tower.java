@@ -18,6 +18,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.TreeMap;
 import java.util.Vector;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Tower
 {
@@ -56,7 +57,7 @@ public class Tower
 	/**
 	 * Array of actions used by the simulator to show the application status.
 	 */
-	private Vector<String> actions;
+	private List<String> actions;
 	
 	public Tower()
 	{
@@ -66,7 +67,7 @@ public class Tower
 		towerChannel = new TowerChannel(this);
 		replyBuffer = new ArrayList<Message>();
 		timer = new Timer();
-		actions = new Vector<String>();
+		actions = new CopyOnWriteArrayList<String>();
 		timer.scheduleAtFixedRate(new TowerTask(), 0, SPEED_MSG_INTERVAL);
 	}
 	
@@ -107,10 +108,10 @@ public class Tower
 	 * Returns the list of actions taken by the tower.
 	 * @return The list of actions.
 	 */
-	public Vector<String> getActions()
+	public List<String> getActions()
 	{
-		Vector<String> result = actions;
-		actions = new Vector<String>();
+		List<String> result = actions;
+		actions = new CopyOnWriteArrayList<String>();
 		return result;
 	}
 	

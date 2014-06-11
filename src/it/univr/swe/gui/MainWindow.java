@@ -6,7 +6,6 @@ import java.awt.Font;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.Vector;
 
 import it.univr.swe.Car;
 import it.univr.swe.ManualCar;
@@ -116,7 +115,7 @@ public class MainWindow extends JFrame{
 	 */
 	public void refresh() {
 		
-		Vector<String> actions = tower.getActions();
+		List<String> actions = tower.getActions();
 		for(String s : actions){
 			towerActions.append(s+"\n");
 		}

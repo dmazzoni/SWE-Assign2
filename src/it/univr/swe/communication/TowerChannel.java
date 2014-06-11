@@ -8,8 +8,8 @@ import it.univr.swe.messages.OkMessage;
 import it.univr.swe.messages.RegisterMessage;
 import it.univr.swe.messages.TowerMessage;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class TowerChannel
 {
@@ -19,7 +19,7 @@ public class TowerChannel
 	public TowerChannel(Tower tower)
 	{
 		this.tower = tower;
-		cars = new ArrayList<Car>();
+		cars = new CopyOnWriteArrayList<Car>();
 	}
 	
 	public void transmit(Message msg)
