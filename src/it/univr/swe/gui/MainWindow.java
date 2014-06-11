@@ -27,14 +27,16 @@ import javax.swing.table.AbstractTableModel;
 @SuppressWarnings("serial")
 public class MainWindow extends JFrame{
 	
+	///Refresh time of the MainWindow
 	private static final int REFRESH_TIME = 20;
 	
+	
 	private Simulator sim;
-	/***/
+
 	private JTable table;
-	/***/
+
 	private JProgressBar[] progress;
-	/***/
+	
 	private JTextArea towerActions;
 	
 	
@@ -111,7 +113,8 @@ public class MainWindow extends JFrame{
 	}
 	
 	/**
-	 * Refreshes the UI using new values of cars,tower and carChannel
+	 * Refreshes the UI using the values of Cars,Actions and Traffics coming from Simulator
+	 * 
 	 */
 	public void refresh() {
 		
@@ -134,6 +137,7 @@ public class MainWindow extends JFrame{
 	
 	/**
 	 * The Main
+	 * 
 	 * @param args
 	 */
 	public static void main(String args[]){
@@ -146,7 +150,7 @@ public class MainWindow extends JFrame{
 	}
 	
 	/**
-	 * Calls MainWindow.Refresh every 10ms
+	 * Calls MainWindow.Refresh every REFRESH_TIME
 	 */
 	private class UploadUI extends TimerTask{
 
@@ -172,16 +176,33 @@ public class MainWindow extends JFrame{
 			cars = new CopyOnWriteArrayList<Car>();
 		}
 
+		/**
+		 * Returns the number of columns in the table
+		 * 
+		 * @return The column count
+		 */
 		@Override
 		public int getColumnCount() {
 			return 4;
 		}
 
+		/**
+		 * Returns the number of rows in the table
+		 * 
+		 * @return The row count
+		 */
 		@Override
 		public int getRowCount() {
 			return cars.size();
 		}
 
+		/**
+		 * Returns the value of a cell in the table
+		 * 
+		 * @param row The cell row
+		 * @param column The cell column
+		 * @return The value of the cell
+		 */
 		@Override
 		public Object getValueAt(int row, int column) {
 			try {
@@ -191,6 +212,13 @@ public class MainWindow extends JFrame{
 			}
 		}
 
+		/**
+		 * Returns the value of a column in a selected car
+		 * 
+		 * @param car The selected car
+		 * @param column The column 
+		 * @return The value of a column in a selected car
+		 */
 		private String getCarData(Car car,int column) {
 			String result = "";
 			
@@ -221,6 +249,11 @@ public class MainWindow extends JFrame{
 			return result;
 		}
 
+		/**
+		 * Sets the new cars list and forces the table to refresh
+		 * 
+		 * @param cars The new car list
+		 */
 		public void updateCars(List<Car> cars) {
 			
 			this.cars = cars;
@@ -228,6 +261,12 @@ public class MainWindow extends JFrame{
 			
 		}
 		
+		/**
+		 * Returns the header name of a selected column
+		 * 
+		 * @param column The Selected column
+		 * @return A string that contains the name of the coloumn
+		 */
 		public String getColumnName(int column)
 		{ 
 			return HEADERNAMES[column];  
