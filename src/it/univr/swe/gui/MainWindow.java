@@ -3,6 +3,7 @@ package it.univr.swe.gui;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Font;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -117,7 +118,8 @@ public class MainWindow extends JFrame{
 		
 		List<String> actions = tower.getActions();
 		for(String s : actions){
-			towerActions.setText(s + "\n" + towerActions.getText());
+			towerActions.append("\n"+s);
+			//towerActions.setCaretPosition(towerActions.getText().length());
 		}
 		
 		List<CarChannel> channels = tower.getCarChannels();
@@ -165,6 +167,10 @@ public class MainWindow extends JFrame{
 		private final String[] HEADERNAMES = {"ID","Speed","Display","Auto-Man"};
 		
 		private List<Car> cars;
+		
+		public MyTableModel(){
+			cars = new ArrayList<Car>();
+		}
 
 		@Override
 		public int getColumnCount() {
