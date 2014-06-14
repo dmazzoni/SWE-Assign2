@@ -19,9 +19,15 @@ import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+/**
+ * Represents the control station of the network.
+ */
 public class Tower
 {
-	private static final int SPEED_MSG_INTERVAL = 10;
+	/**
+	 * The interval between messages sent by the tower, in milliseconds
+	 */
+	private static final int TOWER_MSG_INTERVAL = 10;
 	
 	/**
 	 * Map to take trace of the speed of every registered car in the system.
@@ -58,6 +64,9 @@ public class Tower
 	 */
 	private List<String> actions;
 	
+	/**
+	 * Constructs a Tower instance.
+	 */
 	public Tower()
 	{
 		speedMap = new ConcurrentHashMap<Integer, Boolean>();
@@ -67,7 +76,7 @@ public class Tower
 		replyBuffer = new ArrayList<Message>();
 		timer = new Timer();
 		actions = new CopyOnWriteArrayList<String>();
-		timer.scheduleAtFixedRate(new TowerTask(), 0, SPEED_MSG_INTERVAL);
+		timer.scheduleAtFixedRate(new TowerTask(), 0, TOWER_MSG_INTERVAL);
 	}
 	
 	/**
@@ -115,7 +124,7 @@ public class Tower
 	}
 	
 	/**
-	 * Method invoked by MainWindow to get the value of every CarChannel
+	 * Returns the list of car channels set up by this tower.
 	 * @return The List of carChannels
 	 */
 	public List<CarChannel> getCarChannels()
