@@ -11,7 +11,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import it.univr.swe.Car;
 import it.univr.swe.ManualCar;
 import it.univr.swe.Simulator;
-import it.univr.swe.communication.CarChannel;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -125,9 +124,9 @@ public class MainWindow extends JFrame{
 			towerActions.setText(s+"\n"+towerActions.getText());
 		}
 		
-		List<CarChannel> traffics = infoBean.getTraffics();
+		List<Integer> traffics = infoBean.getTraffics();
 		for(int I = 0;I<traffics.size();I++){
-			progress[I].setValue(traffics.get(I).getTraffic());
+			progress[I].setValue(traffics.get(I));
 		}
 		
 		MyTableModel myTableModel = (MyTableModel) table.getModel();

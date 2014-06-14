@@ -3,6 +3,7 @@ package it.univr.swe.gui;
 import it.univr.swe.Car;
 import it.univr.swe.communication.CarChannel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,7 +24,7 @@ public class InfoBean {
 	/**
 	 * The traffic levels of each {@link CarChannel}.
 	 */
-	private List<CarChannel> trafficLevels; 
+	private List<Integer> trafficLevels; 
 	
 	/**
 	 * Constructs an InfoBean with the specified information.
@@ -31,10 +32,12 @@ public class InfoBean {
 	 * @param newActions the list of tower actions
 	 * @param trafficLevels the list of traffic levels
 	 */
-	public InfoBean(List<Car> cars, List<String> newActions, List<CarChannel> trafficLevels){
+	public InfoBean(List<Car> cars, List<String> newActions, List<CarChannel> channels){
 		this.cars = cars;
 		this.newActions = newActions;
-		this.trafficLevels = trafficLevels;
+		this.trafficLevels = new ArrayList<Integer>();
+		for (CarChannel ch : channels)
+			trafficLevels.add(ch.getTraffic());
 	}
 
 	/**
@@ -57,7 +60,7 @@ public class InfoBean {
 	 * Returns the list of traffic levels.
 	 * @return The list of channel usage levels.
 	 */
-	public List<CarChannel> getTraffics() {
+	public List<Integer> getTraffics() {
 		return trafficLevels;
 	}
 	
