@@ -24,6 +24,12 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.table.AbstractTableModel;
 
+
+/**
+ * 
+ * This is the main class for SWE-Assign2.
+ *
+ */
 @SuppressWarnings("serial")
 public class MainWindow extends JFrame{
 	
