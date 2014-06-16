@@ -8,11 +8,25 @@ import java.util.TimerTask;
 import it.univr.swe.communication.*;
 import it.univr.swe.gui.InfoBean;
 
+/**
+ * Manages the overall operation of the system.
+ *
+ */
 public class Simulator {
 	
+	/**
+	 * The tower.
+	 */
 	private Tower tower;
+	
+	/**
+	 * The ID progressively assigned to each car.
+	 */
 	private static int id = 1;
 
+	/**
+	 * Constructs a simulator that initializes its timer, task and the {@link Tower}.
+	 */
 	public Simulator(){
 		
 		tower = new Tower();
@@ -21,12 +35,33 @@ public class Simulator {
 			
 	}
 	
+	/**
+	 * Every time this task is scheduled by the timer, the simulator:
+	 * <li> creates 1 automatic car until they are 40
+	 * <li> creates 1 manual car until they are 50
+	 * <li> randomly varies the speed of the active cars
+	 * <li> every 5 cycles makes a car exit 
+	 */
 	private class SimulatorTask extends TimerTask {
 
+		/**
+		 * Counts the automatic cars created
+		 */
 		private int automaticCars = 0;
+		
+		/**
+		 * Counts the manual cars created
+		 */
 		private int manualCars = 0;
+		
+		/**
+		 * Reference to the Tower channel to register new active cars
+		 */
 		private TowerChannel towerChannel;
 	
+		/**
+		 * Counts the cycles of run of the task
+		 */
 		private int count = 0;
 		
 		private SimulatorTask() {
@@ -75,7 +110,7 @@ public class Simulator {
 		}
 		
 		/**
-		 * Method that return only the cars that are registered in the network
+		 * Method that returns only the cars that are registered in the network
 		 * @return A List of registered cars
 		 */
 		public List<Car> getRegisteredCars(){
