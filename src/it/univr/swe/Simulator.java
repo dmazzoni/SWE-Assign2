@@ -89,6 +89,15 @@ public class Simulator {
 				manualCars++;
 			}
 			
+			/*if(automaticCars < 5){
+				Car c = new AutomaticCar(id++);
+				c.setSpeed(45);
+				c.setReceiveBehavior(new ReceiveAdapter(c));
+				c.setSendBehavior(new SendAdapter(c));
+				towerChannel.registerCar(c);
+				automaticCars++;
+			}*/
+			
 			List<Car> cars = getRegisteredCars();
 			
 			for(Car c : cars) {
